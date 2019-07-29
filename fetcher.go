@@ -8,6 +8,7 @@ import (
 	"strings"
 )
 
+// makeRequest handles network calls via http
 func makeRequest(url string) (*http.Response, error) {
 	resp, err := http.Get(url)
 	if err != nil {
@@ -16,6 +17,7 @@ func makeRequest(url string) (*http.Response, error) {
 	return resp, nil
 }
 
+// fetchLinks parses the html doc and extracts the links
 func fetchLinks(doc *goquery.Document) []string {
 	links := []string{}
 	if doc != nil {
@@ -28,6 +30,8 @@ func fetchLinks(doc *goquery.Document) []string {
 	return links
 }
 
+// resolveRelativeLinks converts relative links to url
+// It also filters the urls belonging to same domain.
 func resolveRelativeLinks(baseurl string, hrefs []string) []string {
 	urls := []string{}
 	for _, href := range hrefs {
@@ -44,6 +48,7 @@ func resolveRelativeLinks(baseurl string, hrefs []string) []string {
 	return urls
 }
 
+// getBaseURL extract base url from url
 func getBaseURL(u string) (baseurl string, err error) {
 	parsed, err := url.Parse(u)
 	if err != nil {
