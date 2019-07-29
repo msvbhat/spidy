@@ -1,14 +1,8 @@
 package main
 
-type Fetcher interface {
-	Fetch(url string) (title string, urls []string, err error)
-}
-
-var result = Result{cmap: make(map[string]string)}
-
-func Crawl(url string, fetcher Fetcher) {
-	// Acquire the lock and check if the url is already present in the map.
-	// This is for not processing the same link more than once.
+// Crawl Function/Method to recursively crawl the urL
+func (result *Result) Crawl(url string, fetcher Fetcher) {
+	// This Lock is to avoid processing the same link/url twice
 	result.Lock()
 	if _, ok := result.cmap[url]; ok {
 		result.Unlock()
@@ -18,13 +12,13 @@ func Crawl(url string, fetcher Fetcher) {
 	result.cmap[url] = "processing"
 	result.Unlock()
 
-	_, urls, err := fetcher.Fetch(url)
+	body, urls, err := fetcher.Fetch(url)
 	if err != nil {
 		return
 	}
 	// Update the result after acquiring the Lock
 	result.Lock()
-	result.cmap[url] = "processed"
+	result.cmap[url] = body
 	//result.cmap[url] = append(result.cmap[url], urls...)
 	result.Unlock()
 
@@ -32,13 +26,13 @@ func Crawl(url string, fetcher Fetcher) {
 	done := make(chan bool)
 	for _, u := range urls {
 		go func(url string) {
-			Crawl(url, fetcher)
+			result.Crawl(url, fetcher)
 			done <- true
 		}(u)
 	}
 
 	// Now wait for those results from for loop to be ready
-	for _ = range urls {
+	for range urls {
 		<-done
 	}
 }

@@ -53,6 +53,7 @@ func getBaseURL(u string) (baseurl string, err error) {
 	return fmt.Sprintf("%s://%s", parsed.Scheme, parsed.Host), nil
 }
 
+// Fetch method will fetch the links from a single page
 func (r Result) Fetch(url string) (title string, links []string, err error) {
 	resp, err := makeRequest(url)
 	if err != nil {
