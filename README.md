@@ -53,3 +53,5 @@ to limit the layers/depth of crawling.
 1. Limit the concurrency of the process.
 1. Set the depth until which the the crawling should be done.
 1. Modify the result struct so that a sitemap of some kind can be printed.
+1. Add more unit tests.
+1. Setup a CI/CD system which runs some validations before merging.
