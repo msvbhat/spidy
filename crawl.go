@@ -4,7 +4,7 @@ type Fetcher interface {
 	Fetch(url string) (title string, urls []string, err error)
 }
 
-var result = Result{cmap: make(map[string][]string)}
+var result = Result{cmap: make(map[string]string)}
 
 func Crawl(url string, fetcher Fetcher) {
 	// Acquire the lock and check if the url is already present in the map.
@@ -15,7 +15,7 @@ func Crawl(url string, fetcher Fetcher) {
 		return
 	}
 	// Add the url to the map while the lock is being held
-	result.cmap[url] = []string{}
+	result.cmap[url] = "processing"
 	result.Unlock()
 
 	_, urls, err := fetcher.Fetch(url)
@@ -24,7 +24,8 @@ func Crawl(url string, fetcher Fetcher) {
 	}
 	// Update the result after acquiring the Lock
 	result.Lock()
-	result.cmap[url] = append(result.cmap[url], urls...)
+	result.cmap[url] = "processed"
+	//result.cmap[url] = append(result.cmap[url], urls...)
 	result.Unlock()
 
 	// A channel to block till all links are processed

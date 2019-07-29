@@ -5,12 +5,11 @@ import (
 )
 
 func main() {
-	url := "https://google.com"
-	result := Result{}
-	title, links, err := result.Fetch(url)
-	if err != nil {
-		fmt.Println(err)
+	url := "https://monzo.com"
+	res := Result{}
+	Crawl(url, res)
+	fmt.Printf("The links found in %s are...\n", url)
+	for u, _ := range result.cmap {
+		fmt.Println(u)
 	}
-	fmt.Println(title)
-	fmt.Println(links)
 }
