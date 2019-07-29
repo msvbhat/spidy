@@ -14,6 +14,7 @@ func (result *Result) Crawl(url string, fetcher Fetcher) {
 
 	body, urls, err := fetcher.Fetch(url)
 	if err != nil {
+		result.cmap[url] = err.Error()
 		return
 	}
 	// Update the result after acquiring the Lock
