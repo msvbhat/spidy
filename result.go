@@ -11,6 +11,6 @@ import (
 //}
 
 type Result struct {
-	cmap map[string][]string
+	cmap map[string]string
 	sync.Mutex
 }
